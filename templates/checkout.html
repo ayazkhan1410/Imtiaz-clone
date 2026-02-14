@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div id="page-content" class="page-content">
+    <div class="banner">
+        <div class="jumbotron jumbotron-bg text-center rounded-0" style="background-image: url('{% static 'img/bg-header.jpg' %}');">
+            <div class="container">
+                <h1 class="pt-5">Checkout</h1>
+                <p class="lead">Save time and leave the groceries to us.</p>
+            </div>
+        </div>
+    </div>
+
+    <section id="checkout">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-7">
+                    <h5 class="mb-3">BILLING DETAILS</h5>
+                    <form id="payment-form" action="{% url 'process_checkout' %}" method="POST">
+                        {% csrf_token %}
+                        <fieldset>
+                            <div class="form-group row">
+                                <div class="col">
+                                    <input class="form-control" placeholder="Name" type="text" name="name" required>
+                                </div>
+                                <div class="col">
+                                    <input class="form-control" placeholder="Last Name" type="text" name="last_name" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <input class="form-control" placeholder="Company Name" type="text" name="company_name">
+                            </div>
+                            <div class="form-group">
+                                <textarea class="form-control" placeholder="Address" name="address" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <input class="form-control" placeholder="Town / City" type="text" name="city" required>
+                            </div>
+                            <div class="form-group">
+                                <input class="form-control" placeholder="State / Country" type="text" name="state" required>
+                            </div>
+                            <div class="form-group">
+                                <input class="form-control" placeholder="Postcode / Zip" type="text" name="zip_code" required>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col">
+                                    <input class="form-control" placeholder="Email Address" type="email" name="email" required>
+                                </div>
+                                <div class="col">
+                                    <input class="form-control" placeholder="Phone Number" type="tel" name="phone_number" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <input type="checkbox" name="ship_to_different_address"> Ship to a different address?
+                            </div>
+                            <div class="form-group">
+                                <textarea class="form-control" placeholder="Order Notes" name="order_note"></textarea>
+                            </div>
+                        </fieldset>
+                        <button type="submit" class="btn btn-primary float-right">PROCEED TO CHECKOUT <i class="fa fa-check"></i></button>
+                    </form>
+                </div>
+
+                <div class="col-xs-12 col-sm-5">
+                    <div class="holder">
+                        <h5 class="mb-3">YOUR ORDER</h5>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Products</th>
+                                        <th class="text-right">Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in cart_items %}
+                                        <tr>
+                                            <td>{{ item.product.name }} x{{ item.quantity }}</td>
+                                            <td class="text-right">Rp {{ item.total_price }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td><strong>Cart Subtotal</strong></td>
+                                        <td class="text-right">Rp {{ total_price }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Shipping</strong></td>
+                                        <td class="text-right">Rp {{ shipping_cost }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>ORDER TOTAL</strong></td>
+                                        <td class="text-right"><strong>Rp {{ total_amount }}</strong></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

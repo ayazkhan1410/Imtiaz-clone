@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div id="page-content" class="page-content">
+    <div class="banner">
+        <div class="jumbotron jumbotron-bg text-center rounded-0"
+            style="background-image: url('{% static 'img/bg-header.jpg' %}');">
+            <div class="container">
+                <h1 class="pt-5">Category Page</h1>
+                <p class="lead">Browse products by category and discover what suits you best.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="shop-categories owl-carousel mt-5">
+                    {% for category in categories %}
+                    <div class="item">
+                        <a href="#{{ category.name|slugify }}">
+                            <div class="media d-flex align-items-center justify-content-center">
+                                <span class="d-flex mr-2">
+                                    {% if category.name|lower == "vegetables" %}
+                                    <i class="fas fa-carrot"></i>
+                                    {% elif category.name|lower == "meat" %}
+                                    <i class="fas fa-drumstick-bite"></i>
+                                    {% elif category.name|lower == "electronics" %}
+                                    <i class="fas fa-laptop"></i>
+                                    {% elif category.name|lower == "fruits" %}
+                                    <i class="fas fa-apple-alt"></i>
+                                    {% else %}
+                                    <i class="fas fa-box"></i> <!-- Default icon -->
+                                    {% endif %}
+                                </span>
+                                <div class="media-body">
+                                    <h5>{{ category.name }}</h5>
+                                    <p>{{ category.description }}</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% for category in categories %}
+    <section id="{{ category.name|slugify }}" class="{% cycle '' 'gray-bg' %}">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2 class="title">{{ category.name }}</h2>
+                    <div class="product-carousel owl-carousel">
+                        {% for product in category.products.all %}
+                        <div class="item">
+                            <div class="card card-product">
+                                <div class="card-badge">
+                                    <div class="card-badge-container left">
+                                        {% if product.discount_percentage %}
+                                        <span class="badge badge-primary">
+                                            {{ product.discount_percentage }}% OFF
+                                        </span>
+                                        {% endif %}
+                                    </div>
+                                    <a href="{% url 'product-details' product.slug %}">
+                                        <img src="{{ product.image.url }}" alt="{{ product.name }}" 
+                                             class="card-img-top img-fluid" 
+                                             style="width: 450px; height: 255px; object-fit: cover;">
+                                    </a>
+                                </div>
+                                <div class="card-body">
+                                    <h4 class="card-title">
+                                        <a href="{% url 'product-details' product.slug %}">{{ product.name }}</a>
+                                    </h4>
+                                    <div class="card-price">
+                                        {% if product.discount_percentage %}
+                                        <span class="discount">Rp. {{ product.original_price }}</span>
+                                        {% endif %}
+                                        <span class="reguler">Rp. {{ product.calculate_discounted_price }}</span>
+                                    </div>
+                                    <a href="{% url 'product-details' product.slug %}" class="btn btn-block btn-primary">
+                                        View Product
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <p>No products available in this category.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% endfor %}
+</div>
+{% endblock %}

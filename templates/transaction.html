@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+<div id="page-content" class="page-content">
+    <div class="banner">
+        <div class="jumbotron jumbotron-bg text-center rounded-0" style="background-image: url('{% static 'img/bg-header.jpg' %}');">
+            <div class="container">
+                <h1 class="pt-5">Your Transactions</h1>
+                <p class="lead">Track and manage your orders easily with us.</p>
+            </div>
+        </div>
+    </div>
+
+    <section id="cart">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Invoice</th>
+                                    <th>Date</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in orders %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>Order #{{ order.id }}</td>
+                                    <td>{{ order.created_at|date:"d-m-Y" }}</td>
+                                    <td>Rp {{ order.total_price|floatformat:2 }}</td>
+                                    <td>{{ order.get_status_display }}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#detailModal-{{ order.id }}">
+                                            Detail
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="6" class="text-center">No transactions found.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center">
+                            {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                            </li>
+                            {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" href="javascript:void(0)">Previous</a>
+                            </li>
+                            {% endif %}
+                    
+                            {% for num in page_obj.paginator.page_range %}
+                            {% if page_obj.number == num %}
+                            <li class="page-item active">
+                                <a class="page-link" href="javascript:void(0)">{{ num }}</a>
+                            </li>
+                            {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                            </li>
+                            {% endif %}
+                            {% endfor %}
+                    
+                            {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                            </li>
+                            {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" href="javascript:void(0)">Next</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modals -->
+    {% for order in orders %}
+    <div class="modal fade" id="detailModal-{{ order.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Order Details - Order #{{ order.id }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p>
+                                <strong>Shipping Address:</strong><br>
+                                {{ order.shipping_address.street_address }}<br>
+                                {{ order.shipping_address.city }}, {{ order.shipping_address.state }}<br>
+                                {{ order.shipping_address.zip_code }}, {{ order.shipping_address.country }}
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <p>
+                                <strong>Payment Method:</strong><br>
+                                {{ order.payment_method }}
+                            </p>
+                            <p>
+                                <strong>Order Date:</strong><br>
+                                {{ order.created_at|date:"d-m-Y H:i" }}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p><strong>Order Summary:</strong></p>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Product</th>
+                                            <th class="text-right">Subtotal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in order.order_items.all %}
+                                        <tr>
+                                            <td>{{ item.product.name }} x{{ item.quantity }}</td>
+                                            <td class="text-right">Rp {{ item.total_price|floatformat:2 }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td><strong>Cart Subtotal</strong></td>
+                                            <td class="text-right">Rp {{ order.total_price|floatformat:2 }}</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

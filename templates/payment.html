@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div id="page-content" class="page-content">
+    <br>
+<br>
+<br>
+    <section id="payment" class="py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card shadow-lg">
+                        <div class="card-header bg-primary text-white text-center">
+                            <h4>Secure Payment</h4>
+                            <p class="mb-0">Complete your transaction safely</p>
+                        </div>
+                        <div class="card-body">
+                            <form id="payment-form" action="{% url 'complete_payment' order_id=order_id %}" method="POST">
+                                {% csrf_token %}
+                                <div class="form-group mb-4">
+                                    <label for="card-element" class="font-weight-bold">Card Information</label>
+                                    <div id="card-element" class="form-control"></div>
+                                    <small id="card-errors" class="text-danger mt-2 d-block"></small>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block">
+                                    <i class="fa fa-lock"></i> Confirm Payment
+                                </button>
+                            </form>
+                        </div>
+                        <div class="card-footer text-center">
+                            <small class="text-muted">
+                                Powered by <a href="https://stripe.com" target="_blank" class="text-primary">Stripe</a>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-5">
+                <div class="col-md-4">
+                    <div class="card text-center shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">100% Secure Payments</h5>
+                            <p class="card-text">Your payment information is encrypted and secure.</p>
+                            <i class="fa fa-shield-alt fa-3x text-primary"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-center shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">Easy Refunds</h5>
+                            <p class="card-text">Get hassle-free refunds in case of any issues.</p>
+                            <i class="fa fa-undo-alt fa-3x text-primary"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-center shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">24/7 Support</h5>
+                            <p class="card-text">We are here to help you anytime you need.</p>
+                            <i class="fa fa-headset fa-3x text-primary"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+    const stripe = Stripe("{{ stripe_publishable_key }}");
+    const elements = stripe.elements();
+    const card = elements.create('card', {
+        style: {
+            base: {
+                fontSize: '16px',
+                color: '#32325d',
+                fontFamily: 'Arial, sans-serif',
+                '::placeholder': { color: '#aab7c4' },
+            },
+            invalid: { color: '#fa755a' },
+        },
+    });
+    card.mount('#card-element');
+
+    const form = document.querySelector('#payment-form');
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const { paymentIntent, error } = await stripe.confirmCardPayment("{{ client_secret }}", {
+            payment_method: { card: card },
+        });
+
+        if (error) {
+            document.querySelector('#card-errors').textContent = error.message;
+        } else if (paymentIntent.status === 'succeeded') {
+            form.submit();
+        }
+    });
+</script>
+{% endblock %}

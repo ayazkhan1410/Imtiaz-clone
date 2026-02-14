@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div id="page-content" class="page-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <h2 class="text-center mb-5">Order Confirmation</h2>
+                
+                <div class="order-details">
+                    <!-- Order Number and Status -->
+                    <div class="mb-4">
+                        <h4>Order Number: <span class="font-weight-bold">{{ order.id }}</span></h4>
+                        <h5>Status: <span class="badge badge-success">{{ order.status }}</span></h5>
+                        <h5>Payment Status: <span class="badge badge-info">{{ order.payment_status }}</span></h5>
+                    </div>
+
+                    <!-- Billing Details -->
+                    <div class="mb-4">
+                        <h5>Billing Details</h5>
+                        <p><strong>Name:</strong> {{ order.shipping_address.name }} {{ order.shipping_address.last_name }}</p>
+                        <p><strong>Email:</strong> {{ order.shipping_address.email }}</p>
+                        <p><strong>Phone Number:</strong> {{ order.shipping_address.phone_number }}</p>
+                    </div>
+
+                    <!-- Shipping Address -->
+                    <div class="mb-4">
+                        <h5>Shipping Address</h5>
+                        <p>{{ order.shipping_address.address }}</p>
+                        <p>{{ order.shipping_address.city }}, {{ order.shipping_address.state }} {{ order.shipping_address.zip_code }}</p>
+                    </div>
+
+                    <!-- Ordered Items -->
+                    <div class="mb-4">
+                        <h5>Ordered Items</h5>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in order_items %}
+                                <tr>
+                                    <td>{{ item.product.name }}</td>
+                                    <td>{{ item.quantity }}</td>
+                                    <td>Rp {{ item.total_price|floatformat:2 }}</td>
+                                    <td>Rp {{ item.total_price|floatformat:2 }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Order Summary -->
+                    <div class="mb-4">
+                        <h5>Order Summary</h5>
+                        <p><strong>Subtotal:</strong> Rp {{ order.total_price|floatformat:2 }}</p>
+                        <p><strong>Shipping:</strong> Rp 20.000</p>
+                        <p><strong>Total Amount:</strong> Rp {{ order.total_price|add:"20000"|floatformat:2 }}</p>
+                    </div>
+
+                    <!-- Return to Home Button -->
+                    <div class="text-center">
+                        <a href="{% url 'index' %}" class="btn btn-primary mt-4">Return to Home</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

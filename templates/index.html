@@ -1,0 +1,173 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<body>
+    
+    <div id="page-content" class="page-content">
+        <div class="banner">
+            <div class="jumbotron jumbotron-video text-center bg-dark mb-0 rounded-0">
+                <video width="100%" preload="auto" loop autoplay muted>
+                    <source src='{% static "media/im5.mp4" %}' type='video/mp4' />
+                    <source src='{% static "media/im5.mp4" %}' type='video/webm' />
+                </video>
+                <div class="container">
+                    <h1 class="pt-5">
+                        Save time and leave the<br>
+                        groceries to us.
+                    </h1>
+                    <p class="lead">
+                        Always Fresh Everyday.
+                    </p>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="card border-0 text-center">
+                                <div class="card-icon">
+                                    <div class="card-icon-i">
+                                        <i class="fa fa-shopping-basket"></i>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <h4 class="card-title">
+                                        Shop
+                                    </h4>
+                                    <p class="card-text">
+                                        Browse through our wide range of products and easily add your favorite items to the cart with just a few clicks.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card border-0 text-center">
+                                <div class="card-icon">
+                                    <div class="card-icon-i">
+                                        <i class="fas fa-box"></i>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <h4 class="card-title">
+                                        Pack
+                                    </h4>
+                                    <p class="card-text">
+                                        Your selected items are carefully packed to ensure they reach you in perfect condition.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card border-0 text-center">
+                                <div class="card-icon">
+                                    <div class="card-icon-i">
+                                        <i class="fa fa-truck"></i>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <h4 class="card-title">
+                                        Deliver
+                                    </h4>
+                                    <p class="card-text">
+                                        Enjoy fast and reliable delivery to your doorstep, making your shopping experience truly hassle-free.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <section id="why">
+            <h2 class="title">Why Shop at Imtiaz?</h2>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card border-0 text-center gray-bg">
+                            <div class="card-icon">
+                                <div class="card-icon-i text-primary">
+                                    <i class="fas fa-tags"></i>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <h4 class="card-title">Unbeatable Prices</h4>
+                                <p class="card-text">
+                                    At Imtiaz, we bring you the best deals and discounts on a wide range of products. Shop smart and save big without compromising on quality.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-0 text-center gray-bg">
+                            <div class="card-icon">
+                                <div class="card-icon-i text-primary">
+                                    <i class="fas fa-boxes"></i>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <h4 class="card-title">Vast Product Range</h4>
+                                <p class="card-text">
+                                    From fresh groceries and household essentials to electronics and apparel, we’ve got everything you need under one roof.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-0 text-center gray-bg">
+                            <div class="card-icon">
+                                <div class="card-icon-i text-primary">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <h4 class="card-title">Customer First</h4>
+                                <p class="card-text">
+                                    Your satisfaction is our priority. Enjoy a seamless shopping experience with top-notch customer service and convenient shopping options.
+                                </p>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="col-md-12 mt-5 text-center">
+                        <a href="{% url 'shop' %}" class="btn btn-primary btn-lg">START SHOPPING</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+
+        <section id="categories" class="pb-0 gray-bg">
+            <h2 class="title">Categories</h2>
+            <div class="landing-categories owl-carousel">
+                {% for category in categories %}
+                <div class="item">
+                    <div class="card rounded-0 border-0 text-center">
+                        <div class="overflow-hidden">
+                            {% if category.image %}
+                            <img src="{{ category.image.url }}" 
+                                 class="card-img-top img-fluid rounded" 
+                                 alt="{{ category.name }}" 
+                                 style="width: 450px; height: 250px; object-fit: cover;">
+                            {% else %}
+                            <img src="{% static 'default_image.jpg' %}" 
+                                 class="card-img-top img-fluid rounded" 
+                                 alt="{{ category.name }}" 
+                                 style="width: 590px; height: 355px; object-fit: cover;">
+                            {% endif %}
+                        </div>
+                        <div class="card-body d-flex align-items-end justify-content-center">
+                            <a href="{% url 'category-detail' category.slug %}" class="btn btn-primary btn-lg w-100">{{ category.name }}</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+        
+        
+        
+    </div>
+  
+
+    {% endblock %}

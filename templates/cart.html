@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block content %}
+<div id="page-content" class="page-content">
+    <div class="banner">
+        <div class="jumbotron jumbotron-bg text-center rounded-0" style="background-image: url('{% static 'img/bg-header.jpg' %}');">
+            <div class="container">
+                <h1 class="pt-5">Your Cart</h1>
+                <p class="lead">Save time and leave the groceries to us.</p>
+            </div>
+        </div>
+    </div>
+
+    <section id="cart">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th width="10%"></th>
+                                    <th>Products</th>
+                                    <th>Price</th>
+                                    <th width="15%">Quantity</th>
+                                    <th>Subtotal</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in cart_data %}
+                                <tr>
+                                    <td><img src="{{ item.product.image.url }}" width="60"></td>
+                                    <td>{{ item.product.name }}<br><small>{{ item.product.description|truncatewords:10 }}</small></td>
+                                    <td>Rp {{ item.product.calculate_discounted_price }}</td>
+                                    <td>{{ item.quantity }}</td>
+                                    <td>Rp {{ item.total_price }}</td>
+                                    <td>
+                                        <a href="#" class="text-danger remove-item" data-cart-id="{{ item.id }}">
+                                            <i class="fa fa-times"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="6" class="text-center">Your cart is empty!</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col">
+                    <a href="{% url 'shop' %}" class="btn btn-default">Continue Shopping</a>
+                </div>
+                <div class="col text-right">
+                    <div class="input-group w-50 float-right">
+                        <input class="form-control" placeholder="Coupon Code" type="text">
+                        <div class="input-group-append">
+                            <button class="btn btn-default" type="button">Apply</button>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <h6 class="mt-3">Total: Rp {{ cart_data|sum_attribute:"total_price" }}</h6>
+                    <a href="{% url 'checkout' %}" class="btn btn-lg btn-primary">Checkout <i class="fa fa-long-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const removeButtons = document.querySelectorAll('.remove-item');
+
+        removeButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const cartId = this.getAttribute('data-cart-id');
+
+                if (confirm('Are you sure you want to remove this item from the cart?')) {
+                    fetch(`/cart/remove/${cartId}/`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}',
+                        },
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert(data.message);
+                            location.reload(); // Reload the page to reflect changes
+                        } else {
+                            alert(data.message);
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

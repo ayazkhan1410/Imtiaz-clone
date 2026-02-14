@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+<div id="page-content" class="page-content py-5">
+    <br>
+    <br>
+    <br>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-lg text-center">
+                    <div class="card-header bg-success text-white">
+                        <h3 class="mb-0"><i class="fa fa-check-circle"></i> Payment Successful!</h3>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="mb-3">Thank You for Your Purchase!</h4>
+                        <p>
+                            Your order has been successfully processed. We are delighted to have you as our customer and
+                            appreciate your trust in us.
+                        </p>
+                        <p>
+                            A confirmation email with your order details has been sent to your inbox. If you have any
+                            questions or concerns, feel free to contact our support team.
+                        </p>
+                        <p>We hope to serve you again soon!</p>
+                        <a href="{% url 'shop' %}" class="btn btn-primary mt-3">
+                            <i class="fa fa-shopping-cart"></i> Continue Shopping
+                        </a>
+                    </div>
+                    <div class="card-footer text-muted">
+                        <small>Need help? <a href="{% url 'contact' %}" class="text-primary">Contact Us</a></small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

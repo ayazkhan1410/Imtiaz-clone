@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div id="page-content" class="page-content">
+    <div class="banner">
+        <div class="jumbotron jumbotron-bg text-center rounded-0" style="background-image: url('{% static 'img/bg-header.jpg' %}');">
+            <div class="container">
+                <h1 class="pt-5">
+                    Register Page
+                </h1>
+                <p class="lead">
+                    Save time and leave the groceries to us.
+                </p>
+
+                <div class="card card-login mb-5">
+                    <div class="card-body">
+                        <form class="form-horizontal" method="post" action="{% url 'register' %}">
+                            {% csrf_token %}
+
+                            <!-- Full Name -->
+                            <div class="form-group row mt-3">
+                                <div class="col-md-12">
+                                    {{ form.username.errors }}
+                                    <input
+                                        class="form-control"
+                                        type="text"
+                                        name="{{ form.username.name }}"
+                                        placeholder="Full Name"
+                                        value="{{ form.username.value|default:'' }}"
+                                        required
+                                    >
+                                </div>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="form-group row mt-3">
+                                <div class="col-md-12">
+                                    {{ form.email.errors }}
+                                    <input
+                                        class="form-control"
+                                        type="email"
+                                        name="{{ form.email.name }}"
+                                        placeholder="Email"
+                                        value="{{ form.email.value|default:'' }}"
+                                        required
+                                    >
+                                </div>
+                            </div>
+
+                            <!-- Phone -->
+                            <div class="form-group row mt-3">
+                                <div class="col-md-12">
+                                    {{ form.phone.errors }}
+                                    <input
+                                        class="form-control"
+                                        type="text"
+                                        name="{{ form.phone.name }}"
+                                        placeholder="Phone"
+                                        value="{{ form.phone.value|default:'' }}"
+                                        required
+                                    >
+                                </div>
+                            </div>
+
+                            <!-- Password -->
+                            <div class="form-group row">
+                                <div class="col-md-12">
+                                    {{ form.password.errors }}
+                                    <input
+                                        class="form-control"
+                                        type="password"
+                                        name="{{ form.password.name }}"
+                                        placeholder="Password"
+                                        required
+                                    >
+                                </div>
+                            </div>
+
+                            <!-- Confirm Password -->
+                            <div class="form-group row">
+                                <div class="col-md-12">
+                                    {{ form.confirm_password.errors }}
+                                    <input
+                                        class="form-control"
+                                        type="password"
+                                        name="{{ form.confirm_password.name }}"
+                                        placeholder="Confirm Password"
+                                        required
+                                    >
+                                </div>
+                            </div>
+
+                            <!-- Terms & Conditions -->
+                            <div class="form-group row">
+                                <div class="col-md-12">
+                                    {{ form.terms.errors }}
+                                    <div class="checkbox">
+                                        <input id="checkbox0" type="checkbox" name="{{ form.terms.name }}">
+                                        <label for="checkbox0" class="mb-0">
+                                            I Agree with <a href="terms.html" class="text-light">Terms & Conditions</a>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="form-group row text-center mt-4">
+                                <div class="col-md-12">
+                                    <button type="submit" class="btn btn-primary btn-block text-uppercase">Register</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
