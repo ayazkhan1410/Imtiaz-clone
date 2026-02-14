@@ -36,7 +36,7 @@ A comprehensive, feature-rich e-commerce platform built with Django, featuring c
 1. **Clone the repository**:
 
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/ayazkhan1410/Imtiaz-clone.git
    cd Imtiaz
    ```
 
